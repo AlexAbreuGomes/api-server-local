@@ -22,7 +22,7 @@ router.get('/', async (req, res) => {
             return res.status(404).json({ message: 'Produto não encontrado.' });
         }
 
-        console.log('Dados retornados:', result.recordset);
+        
         // Enviando os dados do produto como resposta JSON
         res.json(result.recordset[0]); // Retorna apenas um produto
     } catch (err) {

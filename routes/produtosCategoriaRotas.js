@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
         console.log('Conectado ao banco de dados');
 
         const result = await sql.query(`SELECT * FROM produtos WHERE category_id = ${categoryId}`);
-        console.log('Produtos retornados:', result.recordset);
+       
 
         res.status(200).json(result.recordset);
     } catch (err) {

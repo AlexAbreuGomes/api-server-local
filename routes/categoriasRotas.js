@@ -10,10 +10,10 @@ router.get('/', async (req, res) => {
     
     try {
         await sql.connect(config);
-        console.log('Conectado ao banco de dados');
+        console.log('Conectado ao banco de dados categorias');
 
         const result = await sql.query('SELECT * FROM categorias');
-        console.log('Dados de categorias retornados:', result.recordset);
+       
 
         res.json(result.recordset);
     } catch (err) {
@@ -36,7 +36,7 @@ router.get('/produtos', async (req, res) => {
         console.log('Conectado ao banco de dados');
 
         const result = await sql.query(`SELECT * FROM produtos WHERE category_id = ${categoryId}`);
-        console.log('Produtos retornados:', result.recordset);
+        
 
         res.status(200).json(result.recordset);
     } catch (err) {

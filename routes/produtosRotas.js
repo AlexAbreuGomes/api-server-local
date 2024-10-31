@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
 
         // Executando a consulta SQL para obter todos os produtos
         const result = await sql.query('SELECT * FROM produtos');
-        console.log('Dados retornados:', result.recordset);
+        
 
         // Enviando os dados de produtos como resposta JSON
         res.json(result.recordset);
