@@ -18,3 +18,4 @@ build/
 # Ignorar configurações do editor
 .vscode/
 .idea/
+.vercel

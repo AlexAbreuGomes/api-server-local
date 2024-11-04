@@ -1,20 +1,22 @@
 const express = require('express');
 const cors = require('cors');
 const sql = require('mssql');
-const config = require('./config/db');
+const config = require('./config/db'); // Certifique-se de que o caminho esteja correto
 
+// Importação das rotas
 const produtosRotas = require('./routes/getProdutos');
 const categoriasRotas = require('./routes/getCategorias');
 const produtosPorCategoriaRotas = require('./routes/getProdutosCategoria');
 const produtosDetalhesRotas = require('./routes/getProdutosDetalhes');
 const postProdutosRotas = require('./routes/postProdutos');
 const postCategoriaRotas = require('./routes/postCategoria');
-const deleteProduto = require('./routes/deleteProduto');
+const deleteProduto = require('./routes/deleteProduto'); // A rota de exclusão
 
 const app = express();
 
-app.use(cors({ origin: '*' }));
-app.use(express.json());
+// Middleware
+app.use(cors({ origin: '*' })); // Permitir todas as origens
+app.use(express.json()); // Para suportar JSON no corpo da requisição
 
 // Variável para manter a conexão do banco de dados
 let isConnected = false;
@@ -32,21 +34,21 @@ const connectDB = async () => {
     }
 };
 
-// Define as rotas
-app.use('/products', produtosRotas);
-app.use('/categories', categoriasRotas);
-app.use('/produtosCategoria', produtosPorCategoriaRotas);
-app.use('/produtosDetalhes', produtosDetalhesRotas);
-app.use('/addProduto', postProdutosRotas);
-app.use('/addCategoria', postCategoriaRotas);
-app.use('/deleteProduto', deleteProduto);
+// Definindo as rotas
+app.use('/products', produtosRotas); // Rotas para produtos
+app.use('/categories', categoriasRotas); // Rotas para categorias
+app.use('/produtosCategoria', produtosPorCategoriaRotas); // Produtos por categoria
+app.use('/produtosDetalhes', produtosDetalhesRotas); // Detalhes dos produtos
+app.use('/addProduto', postProdutosRotas); // Adicionar produtos
+app.use('/addCategoria', postCategoriaRotas); // Adicionar categorias
+app.delete('/deleteProduto/:id', deleteProduto); // Exclusão de produtos
 
 // Rota para verificar o status da API
 app.get('/', (req, res) => {
     res.send('API está funcionando!');
 });
 
-// Exporte a função para ser usada pelo Vercel
+// Exportar a função para ser usada pelo Vercel
 module.exports = async (req, res) => {
     await connectDB(); // Conecta ao banco de dados, se não estiver conectado
     app(req, res); // Processa a requisição usando o Express
