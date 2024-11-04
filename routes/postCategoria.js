@@ -1,12 +1,8 @@
-// routes/postCategoria.js
-const express = require('express');
 const sql = require('mssql');
 const config = require('../config/db'); // Importa a configuração do banco de dados
 
-const router = express.Router();
-
-// Rota POST para adicionar uma nova categoria
-router.post('/', async (req, res) => {
+// Função para adicionar uma nova categoria
+const addCategory = async (req, res) => {
     // Obtém os dados do corpo da requisição
     const { title, image } = req.body;
 
@@ -34,6 +30,14 @@ router.post('/', async (req, res) => {
         console.error('Erro ao inserir categoria: ', err);
         res.status(500).json({ message: 'Erro ao inserir categoria', error: err });
     }
-});
+};
 
-module.exports = router;
+// Exporta a função como um manipulador de requisições
+module.exports = async (req, res) => {
+    if (req.method === 'POST') {
+        return addCategory(req, res);
+    } else {
+        res.setHeader('Allow', ['POST']);
+        res.status(405).end(`Method ${req.method} Not Allowed`);
+    }
+};

@@ -1,11 +1,8 @@
-const express = require('express');
 const sql = require('mssql');
 const config = require('../config/db'); // Importa a configuração do banco de dados
 
-const router = express.Router();
-
-// Rota para inserir um novo produto
-router.post('/', async (req, res) => {
+// Função para inserir um novo produto
+const addProduct = async (req, res) => {
     console.log('Requisição recebida para inserir produto');
 
     // Obtendo os dados do produto do corpo da requisição
@@ -24,22 +21,30 @@ router.post('/', async (req, res) => {
 
         // Criando e executando a consulta com os parâmetros
         const request = new sql.Request();
-        request.input('name', sql.NVarChar(255), name); // nvarchar(255)
-        request.input('image', sql.NVarChar(500), image); // nvarchar(500)
-        request.input('price', sql.Decimal(10, 2), price); // decimal(10,2)
-        request.input('url', sql.NVarChar(500), url); // nvarchar(500)
-        request.input('category_id', sql.Int, category_id); // int
-        request.input('description', sql.NVarChar(sql.MAX), description); // nvarchar(MAX)
+        request.input('name', sql.NVarChar(255), name);
+        request.input('image', sql.NVarChar(500), image);
+        request.input('price', sql.Decimal(10, 2), price);
+        request.input('url', sql.NVarChar(500), url);
+        request.input('category_id', sql.Int, category_id);
+        request.input('description', sql.NVarChar(sql.MAX), description);
         
         await request.query(query);
         console.log('Produto inserido com sucesso');
 
         // Respondendo com sucesso
-        res.status(201).send('Produto inserido com sucesso');
+        res.status(201).json({ message: 'Produto inserido com sucesso' });
     } catch (err) {
         console.error('Erro ao inserir produto: ', err);
-        res.status(500).send('Erro ao inserir produto');
+        res.status(500).json({ message: 'Erro ao inserir produto', error: err });
     }
-});
+};
 
-module.exports = router; // Exporta a rota para ser usada no index.js
+// Exporta a função como um manipulador de requisições
+module.exports = async (req, res) => {
+    if (req.method === 'POST') {
+        return addProduct(req, res);
+    } else {
+        res.setHeader('Allow', ['POST']);
+        res.status(405).end(`Method ${req.method} Not Allowed`);
+    }
+};
